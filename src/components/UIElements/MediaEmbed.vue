@@ -2,7 +2,13 @@
   <img    v-if="getMediaType(url) === 'img'" :src='$getResourceURL(url)' @dragstart="drag($event)" alt />
   <video  v-else-if="getMediaType(url) ==='vid' && gifmode != undefined" :src='$getResourceURL(url)' :width="videoWidth" autoplay="true" muted="true" loop disablePictureInPicture />
   <video  v-else-if="getMediaType(url) ==='vid' && gifmode == undefined" :src='$getResourceURL(url)' :width="videoWidth" controls controlsList="nodownload" disablePictureInPicture alt />
-  <div    v-else-if="getMediaType(url) === 'swf'" class="swf-renderer"></div>
+  <div    v-else-if="getMediaType(url) === 'swf'" class="swf-renderer">
+    <KeyButton keyCode="KeyW" :player="player"/>
+    <KeyButton keyCode="KeyA" :player="player"/>
+    <KeyButton keyCode="KeyS" :player="player"/>
+    <KeyButton keyCode="KeyD" :player="player"/>
+    <KeyButton keyCode="Space" :player="player"/>
+  </div>
 
   <component v-else-if="getMediaType(url) === 'html'"
   :is="frameType"
@@ -20,11 +26,15 @@
 import fs from 'fs'
 import path from 'path'
 import Resources from "@/resources.js"
+import KeyButton from '@/components/UIElements/KeyButton.vue'
 
 export default {
   name: "MediaEmbed",
   props: ['url', 'gifmode', 'webarchive'],
   emits: ['blockedevent'], 
+  components: { KeyButton },
+  beforeMount() {
+  },
   mounted() {
     if(this.$el.classList.contains("swf-renderer")) {
       window.onhashchange = (e) => {
@@ -39,9 +49,9 @@ export default {
       }
 
       const ruffle = window.RufflePlayer.newest();
-      const player = ruffle.createPlayer();
+      this.player = ruffle.createPlayer();
 
-      this.$el.appendChild(player);
+      this.$el.appendChild(this.player);
 
       const data = this.getFileBuffer(`assets:/${this.url}`);
       const config = {
@@ -54,7 +64,7 @@ export default {
                     allowScriptAccess: true,
                 };
 
-      player.load({ data, ...config });
+      this.player.load({ data, ...config });
     }
   },
   data() {
@@ -257,7 +267,8 @@ export default {
         start: undefined,
         delay: undefined,
         remaining: undefined
-      }
+      },
+      player: undefined
     }
   },
   computed: {
