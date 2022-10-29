@@ -3,11 +3,7 @@
   <video  v-else-if="getMediaType(url) ==='vid' && gifmode != undefined" :src='$getResourceURL(url)' :width="videoWidth" autoplay="true" muted="true" loop disablePictureInPicture />
   <video  v-else-if="getMediaType(url) ==='vid' && gifmode == undefined" :src='$getResourceURL(url)' :width="videoWidth" controls controlsList="nodownload" disablePictureInPicture alt />
   <div    v-else-if="getMediaType(url) === 'swf'" class="swf-renderer">
-    <KeyButton keyCode="KeyW" :player="player"/>
-    <KeyButton keyCode="KeyA" :player="player"/>
-    <KeyButton keyCode="KeyS" :player="player"/>
-    <KeyButton keyCode="KeyD" :player="player"/>
-    <KeyButton keyCode="Space" :player="player"/>
+    <Keyboard :player="player"></Keyboard>
   </div>
 
   <component v-else-if="getMediaType(url) === 'html'"
@@ -26,13 +22,13 @@
 import fs from 'fs'
 import path from 'path'
 import Resources from "@/resources.js"
-import KeyButton from '@/components/UIElements/KeyButton.vue'
+import Keyboard from '@/components/UIElements/ScreenKeyboard.vue'
 
 export default {
   name: "MediaEmbed",
   props: ['url', 'gifmode', 'webarchive'],
   emits: ['blockedevent'], 
-  components: { KeyButton },
+  components: { Keyboard },
   beforeMount() {
   },
   mounted() {
