@@ -47,7 +47,7 @@ export default {
       const ruffle = window.RufflePlayer.newest();
       this.player = ruffle.createPlayer();
 
-      this.$el.appendChild(this.player);
+      this.$el.prepend(this.player);
 
       const data = this.getFileBuffer(`assets:/${this.url}`);
       const config = {
