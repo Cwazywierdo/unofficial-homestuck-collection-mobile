@@ -1,5 +1,5 @@
 <template>
-  <button :style="cssProps" @mousedown="clicked" @mouseup="released" @mouseleave="released">{{ infoFromKeyCode.name }}</button>
+  <button :style="cssProps" @mousedown="clicked" @mouseup="released" @mouseleave="released">{{ nameFromKeyCode.name }}</button>
 </template>
 
 <script>
@@ -24,7 +24,7 @@ export default{
     released() { this.CREvent("keyup") }
   },
   computed: {
-    infoFromKeyCode() {
+    nameFromKeyCode() {
       switch (this.keyCode) {
         case "Escape": return { name: "Esc", location: { x: 0, y: 0 }, width: 2.5 }
 
@@ -140,7 +140,7 @@ export default{
     },
     cssProps() {
       return {
-        '--text-scalar': `${ this.infoFromKeyCode.width != null ? ( 1 / this.infoFromKeyCode.width) : 1 }`,
+        '--text-scalar': `${ this.nameFromKeyCode.width != null ? ( 1 / this.nameFromKeyCode.width) : 1 }`,
         '--button-size': `${this.buttonSize}px`
       }
     }
