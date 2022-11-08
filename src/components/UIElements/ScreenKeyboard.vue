@@ -1,6 +1,8 @@
 <template>
   <div>
-    <KeyButton v-for="k in keys" :keyCode="k" :player="player"></KeyButton>
+    <div class="key-section">
+      <KeyButton v-for="k in keys" :keyCode="k" :player="player" :buttonSize="50"></KeyButton>
+    </div>
   </div>
 </template>
 
@@ -13,3 +15,12 @@ export default {
 }
 
 </script>
+
+<style scoped>
+.key-section {
+  background-color: lightblue;
+  display: inline-grid;
+  grid-template-columns: repeat(2, auto);
+}
+
+</style>
