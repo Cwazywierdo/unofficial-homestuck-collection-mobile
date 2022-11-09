@@ -30,6 +30,10 @@ export default {
   emits: ['blockedevent'], 
   components: { Keyboard },
   beforeMount() {
+    if(this.getMediaType(this.url) === 'swf') {
+      const ruffle = window.RufflePlayer.newest();
+      this.player = ruffle.createPlayer();
+    }
   },
   mounted() {
     if(this.$el.classList.contains("swf-renderer")) {
@@ -43,9 +47,6 @@ export default {
           })
         }
       }
-
-      const ruffle = window.RufflePlayer.newest();
-      this.player = ruffle.createPlayer();
 
       this.$el.prepend(this.player);
 
