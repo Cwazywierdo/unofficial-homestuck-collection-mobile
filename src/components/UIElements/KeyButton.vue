@@ -6,9 +6,6 @@
 export default{
   name: "KeyButton",
   props: ['keyCode', 'player', 'buttonSize'],
-  mounted() {
-    
-  },
   methods: {
     CREvent(eventType) {
       // ruffle needs to be clicked into focus to register keyboard events
