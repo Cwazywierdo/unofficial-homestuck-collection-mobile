@@ -78,14 +78,27 @@ export default {
     for (let island of keyIslands) {
       let section = document.createElement('div');
       section.classList.add('key-section');
+      
+      // get bounds for each island
+      let minX = Number.MAX_VALUE, minY = Number.MAX_VALUE, maxX = 0;
+      for (let key of island) {
+        minX = Math.min(minX, key.x);
+        maxX = Math.max(maxX, key.x);
+        minY = Math.min(minY, key.y);
+      }
 
+      // set section width
+      section.style.gridTemplateColumns = `repeat(${maxX-minX+1}, auto)`
+
+      // create each key and assign position within its section
       const keyClass = Vue.extend(KeyButton);
       for (let key of island) {
         let keyElement = new keyClass({
           propsData: {
             keyCode: key.key,
             player: this.player,
-            buttonSize: 50
+            buttonSize: 50,
+            location: { x: key.x - minX, y: key.y - minY}
           }
         });
         keyElement.$mount();
@@ -220,7 +233,6 @@ export default {
 .key-section {
   background-color: lightblue;
   display: inline-grid;
-  grid-template-columns: repeat(2, auto);
 }
 
 </style>
