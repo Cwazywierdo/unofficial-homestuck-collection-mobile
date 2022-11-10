@@ -1,5 +1,5 @@
 <template>
-  <button :style="cssProps" @mousedown="clicked" @mouseup="released" @mouseleave="released">{{ nameFromKeyCode.name }}</button>
+  <button class="key-button" :style="cssProps" @mousedown="clicked" @mouseup="released" @mouseleave="released">{{ nameFromKeyCode.name }}</button>
 </template>
 
 <script>
@@ -146,7 +146,7 @@ export default{
 </script>
 
 <style>  
-  button {
+  .key-button {
     width: var(--button-size);
     height: var(--button-size);
     --margin: 2px;
@@ -162,7 +162,7 @@ export default{
     text-align: center;
   }
 
-  button:active:hover {
+  .key-button:active:hover {
     background-color: #3ebe40;
   }
 </style>
