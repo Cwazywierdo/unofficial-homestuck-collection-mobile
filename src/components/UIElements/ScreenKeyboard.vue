@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="keyboard-wrapper" :style="cssProps">
   </div>
 </template>
 
@@ -9,7 +9,7 @@ import KeyButton from '@/components/UIElements/KeyButton.vue'
 
 export default {
   components: { KeyButton },
-  props: ["player", "keys"],
+  props: ["player", "keys", "width"],
   mounted() {
     const width = 23;
     const Map2DTo1D = (x, y) => y * width + x;
@@ -87,8 +87,11 @@ export default {
         minY = Math.min(minY, key.y);
       }
 
+      let sectionWidth = maxX - minX + 1
+      let keyWidth = this.width / Math.max(sectionWidth + 1, 6);
+
       // set section width
-      section.style.gridTemplateColumns = `repeat(${maxX-minX+1}, auto)`
+      section.style.gridTemplateColumns = `repeat(${sectionWidth}, auto)`
 
       // create each key and assign position within its section
       const keyClass = Vue.extend(KeyButton);
@@ -97,7 +100,7 @@ export default {
           propsData: {
             keyCode: key.key,
             player: this.player,
-            buttonSize: 50,
+            buttonSize: keyWidth,
             location: { x: key.x - minX, y: key.y - minY}
           }
         });
@@ -224,6 +227,13 @@ export default {
         default: return undefined
       }
     }
+  },
+  computed: {
+    cssProps() {
+      return {
+        'width': `${this.width}px`
+      };
+    }
   }
 }
 
@@ -231,8 +241,14 @@ export default {
 
 <style>
 .key-section {
-  background-color: lightblue;
   display: inline-grid;
+  margin: 20px;
 }
 
+#keyboard-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  align-items: center;
+}
 </style>
