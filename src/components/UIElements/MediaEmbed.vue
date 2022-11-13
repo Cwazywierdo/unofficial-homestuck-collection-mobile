@@ -48,6 +48,9 @@ export default {
         }
       }
 
+      this.player.style.width = `${this.flashProps.width}px`;
+      this.player.style.height = `${this.flashProps.height}px`;
+      this.player.style.verticalAlign = 'top';
       this.$el.prepend(this.player);
 
       const data = this.getFileBuffer(`assets:/${this.url}`);
@@ -55,7 +58,8 @@ export default {
                     autoplay: "on",
                     unmuteOverlay: "hidden",
                     preloader: false,
-                    letterbox: "on",
+                    letterbox: "off",
+                    backgroundColor: this.flashProps.bgcolor,
                     contextMenu: false,
                     quality: "best",
                     allowScriptAccess: true,
