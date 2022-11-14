@@ -1,5 +1,8 @@
 <template>
-  <div id="keyboard-wrapper" :style="cssProps">
+  <div>
+    <div id="keyboard-wrapper" :style="cssProps">
+    </div>
+    <button id="show-keyboard" @click="isShowingFull = !isShowingFull">{{ isShowingFull ? "Hide" : "Show" }} Full</button>
   </div>
 </template>
 
@@ -7,110 +10,16 @@
 import Vue from 'vue'
 import KeyButton from '@/components/UIElements/KeyButton.vue'
 
+const allKeys = ["Escape","F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12","Backquote","Digit1","Digit2","Digit3","Digit4","Digit5","Digit6","Digit7","Digit8","Digit9","Digit0","Minus","Equal","Backspace","Tab","KeyQ","KeyW","KeyE","KeyR","KeyT","KeyY","KeyU","KeyI","KeyO","KeyP","BracketLeft","BracketRight","Backslash","CapsLock","KeyA","KeyS","KeyD","KeyF","KeyG","KeyH","KeyJ","KeyK","KeyL","Semicolon","Quote","Enter","ShiftLeft","KeyZ","KeyX","KeyC","KeyV","KeyB","KeyN","KeyM","Comma","Period","Slash","ShiftRight","ControlLeft","AltLeft","AltRight","ControlRight","Space","Insert","Delete","ScrollLock","Home","End","Pause","PageUp","PageDown","ArrowLeft","ArrowUp","ArrowDown","ArrowRight","Numpad7","Numpad8","Numpad9","NumpadAdd","NumpadAdd","Numpad4","Numpad5","Numpad6","NumpadSubtract","Numpad1","Numpad2","Numpad3","NumpadMultiply","Numpad0","NumpadDecimal","NumpadDivide"]
+
 export default {
   components: { KeyButton },
   props: ["player", "keys", "width"],
+  updated() {
+    this.setupKeyboard();
+  },
   mounted() {
-    const width = 23;
-    const Map2DTo1D = (x, y) => y * width + x;
-
-    // create map of used keys
-    let keyMap = []
-    for (const key of this.keys) {
-      let loc = this.infoFromKeyCode(key);
-      keyMap[Map2DTo1D(loc.x, loc.y)] = { key: key, ...loc };
-    }
-
-    // create empty array to store each island of keys
-    let keyIslands = [];
-
-    // treat arrow keys specially:
-    //    If you have left and right, but not up and down, then while left and right 
-    //    are technically seperated on the map, they should remain grouped together.
-    { 
-      let arrowIsland = [];
-
-      for (let name of ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]) {
-        if (this.keys.includes(name)) {
-          let key = this.infoFromKeyCode(name);
-          keyMap[Map2DTo1D(key.x, key.y)] = 0;
-          arrowIsland.push(key);
-        }
-      }
-
-      if (arrowIsland.length > 0) {
-        keyIslands.push(arrowIsland);
-      }
-    }
-
-    // while there are unaccounted keys in the map...
-    for (let first; first = keyMap.find(k => k); ) {
-      // Create queue of searched keys
-      let bfsQueue = [first];
-      keyMap[Map2DTo1D(first.x, first.y)] = 0;
-      
-      // create empty array to store keys in this island
-      let island = [];
-
-      // while the queue isn't empty...
-      for (let key; key = bfsQueue.shift(); ) {
-        island.push(key);
-
-        // for all surrounding keys...
-        for (let x = -1; x < 2; x++) {
-          for (let y = -1; y < 2; y++) {
-            let neighbor = keyMap[Map2DTo1D(key.x + x, key.y + y)];
-            // if the neighbor exists...
-
-            if(neighbor) {
-              // add the neighbor to the queue so it's neighbors can be checked              
-              bfsQueue.push(neighbor);
-
-              // mark the key as counted on the map
-              keyMap[Map2DTo1D(neighbor.x, neighbor.y)] = 0;
-            }
-          }
-        }
-      }
-      keyIslands.push(island);
-    }
-    
-    for (let island of keyIslands) {
-      let section = document.createElement('div');
-      section.classList.add('key-section');
-      
-      // get bounds for each island
-      let minX = Number.MAX_VALUE, minY = Number.MAX_VALUE, maxX = 0;
-      for (let key of island) {
-        minX = Math.min(minX, key.x);
-        maxX = Math.max(maxX, key.x);
-        minY = Math.min(minY, key.y);
-      }
-
-      let sectionWidth = maxX - minX + 1
-      let keyWidth = this.width / Math.max(sectionWidth + 1, 6);
-
-      // set section width
-      section.style.gridTemplateColumns = `repeat(${sectionWidth}, auto)`
-
-      // create each key and assign position within its section
-      const keyClass = Vue.extend(KeyButton);
-      for (let key of island) {
-        let keyElement = new keyClass({
-          propsData: {
-            keyCode: key.key,
-            player: this.player,
-            buttonSize: keyWidth,
-            location: { x: key.x - minX, y: key.y - minY}
-          }
-        });
-        keyElement.$mount();
-        section.appendChild(keyElement.$el);
-      }
-
-      this.$el.appendChild(section);
-    }
-
+    this.setupKeyboard();
   },
   methods: {
     infoFromKeyCode(keyCode) {
@@ -227,7 +136,118 @@ export default {
 
         default: return undefined
       }
+    },
+    setupKeyboard() {
+      const sections = document.getElementsByClassName("key-section");
+      Array.from(sections).forEach((e, _) => { e.remove() });
+      
+      const width = 24;
+      const Map2DTo1D = (x, y) => y * width + x;
+
+      // create map of used keys
+      let keyPool = this.isShowingFull ? allKeys : this.keys;
+      let keyMap = []
+      for (const key of keyPool) {
+        let loc = this.infoFromKeyCode(key);
+        keyMap[Map2DTo1D(loc.x, loc.y)] = { key: key, ...loc };
+      }
+
+      // create empty array to store each island of keys
+      let keyIslands = [];
+
+      // treat arrow keys specially:
+      //    If you have left and right, but not up and down, then while left and right 
+      //    are technically seperated on the map, they should remain grouped together.
+      { 
+        let arrowIsland = [];
+
+        for (let name of ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]) {
+          if (this.keys.includes(name)) {
+            let key = this.infoFromKeyCode(name);
+            keyMap[Map2DTo1D(key.x, key.y)] = 0;
+            arrowIsland.push(key);
+          }
+        }
+
+        if (arrowIsland.length > 0) {
+          keyIslands.push(arrowIsland);
+        }
+      }
+
+      // while there are unaccounted keys in the map...
+      for (let first; first = keyMap.find(k => k); ) {
+        // Create queue of searched keys
+        let bfsQueue = [first];
+        keyMap[Map2DTo1D(first.x, first.y)] = 0;
+        
+        // create empty array to store keys in this island
+        let island = [];
+
+        // while the queue isn't empty...
+        for (let key; key = bfsQueue.shift(); ) {
+          island.push(key);
+
+          // for all surrounding keys...
+          for (let x = -1; x < 2; x++) {
+            for (let y = -1; y < 2; y++) {
+              let neighbor = keyMap[Map2DTo1D(key.x + x, key.y + y)];
+              // if the neighbor exists...
+
+              if(neighbor) {
+                console.log(`${key.key} -> ${neighbor.key}`)
+                // add the neighbor to the queue so it's neighbors can be checked              
+                bfsQueue.push(neighbor);
+
+                // mark the key as counted on the map
+                keyMap[Map2DTo1D(neighbor.x, neighbor.y)] = 0;
+              }
+            }
+          }
+        }
+        keyIslands.push(island);
+      }
+      
+      for (let island of keyIslands) {
+        let section = document.createElement('div');
+        section.classList.add('key-section');
+        
+        // get bounds for each island
+        let minX = Number.MAX_VALUE, minY = Number.MAX_VALUE, maxX = 0;
+        for (let key of island) {
+          minX = Math.min(minX, key.x);
+          maxX = Math.max(maxX, key.x);
+          minY = Math.min(minY, key.y);
+        }
+
+        let sectionWidth = maxX - minX + 1
+        let keyWidth = this.width / Math.max(sectionWidth + 1, 6);
+
+        // set section width
+        section.style.gridTemplateColumns = `repeat(${sectionWidth}, auto)`
+
+        // create each key and assign position within its section
+        const keyClass = Vue.extend(KeyButton);
+        for (let key of island) {
+          let keyElement = new keyClass({
+            propsData: {
+              keyCode: key.key,
+              player: this.player,
+              buttonSize: keyWidth,
+              location: { x: key.x - minX, y: key.y - minY}
+            }
+          });
+          keyElement.$mount();
+          section.appendChild(keyElement.$el);
+        }
+
+        document.getElementById("keyboard-wrapper").appendChild(section);
+      }
     }
+  },
+  data() {
+    return {
+      isShowingFull: false
+    };
   },
   computed: {
     cssProps() {
@@ -252,4 +272,18 @@ export default {
   flex-wrap: wrap;
   align-items: center;
 }
+
+#show-keyboard {
+  background-color: #9be24a;
+  border: none;
+  color: white;
+  font-size: 20px;
+  margin-left: 20px;
+  padding: 5px;
+}
+
+#show-keyboard:active {
+  filter: brightness(.85);
+}
+
 </style>
