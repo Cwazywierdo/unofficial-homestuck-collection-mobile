@@ -213,6 +213,7 @@ export default {
         case "Numpad9": return { key: "Numpad9", x: 21, y: 2 }
         case "NumpadAdd": return { key: "NumpadAdd", x: 22, y: 2 }
         case "NumpadAdd": return { key: "NumpadAdd", x: 22, y: 2 }
+        case "Numpad4": return { key: "Numpad4", x: 19, y: 3 }
         case "Numpad5": return { key: "Numpad5", x: 20, y: 3 }
         case "Numpad6": return { key: "Numpad6", x: 21, y: 3 }
         case "NumpadSubtract": return { key: "NumpadSubtract", x: 22, y: 3 }
