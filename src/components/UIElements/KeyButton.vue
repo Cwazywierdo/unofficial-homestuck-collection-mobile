@@ -165,6 +165,6 @@ export default{
   }
 
   .key-button:active:hover {
-    background-color: #3ebe40;
+    filter: brightness(.85);
   }
 </style>
