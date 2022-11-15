@@ -219,8 +219,9 @@ export default {
           minY = Math.min(minY, key.y);
         }
 
+        const keyPadding = 2;
         let sectionWidth = maxX - minX + 1
-        let keyWidth = this.width / Math.max(sectionWidth + 1, 6);
+        let keyWidth = this.width / Math.max(sectionWidth + 1, 6) - (2*keyPadding);
 
         // set section width
         section.style.gridTemplateColumns = `repeat(${sectionWidth}, auto)`
