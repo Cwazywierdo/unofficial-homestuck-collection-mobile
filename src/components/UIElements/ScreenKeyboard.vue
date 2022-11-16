@@ -196,7 +196,6 @@ export default {
               // if the neighbor exists...
 
               if(neighbor) {
-                console.log(`${key.key} -> ${neighbor.key}`)
                 // add the neighbor to the queue so it's neighbors can be checked              
                 bfsQueue.push(neighbor);
 
