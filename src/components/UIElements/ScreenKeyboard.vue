@@ -103,19 +103,19 @@ export default {
 
         case "Space": return { key: "Space", x: 5, y: 7 }
         
-        case "Insert": return { key: "Insert", x: 15, y: 2 }
-        case "Delete": return { key: "Delete", x: 15, y: 3 }
-        case "ScrollLock": return { key: "ScrollLock", x: 16, y: 1 }
-        case "Home": return { key: "Home", x: 16, y: 2 }
-        case "End": return { key: "End", x: 16, y: 3 }
-        case "Pause": return { key: "Pause", x: 17, y: 1 }
-        case "PageUp": return { key: "PageUp", x: 17, y: 2 }
-        case "PageDown": return { key: "PageDown", x: 17, y: 3 }
+        case "Insert": return { key: "Insert", x: 15, y: 3 }
+        case "Delete": return { key: "Delete", x: 15, y: 4 }
+        case "ScrollLock": return { key: "ScrollLock", x: 16, y: 2 }
+        case "Home": return { key: "Home", x: 16, y: 3 }
+        case "End": return { key: "End", x: 16, y: 4 }
+        case "Pause": return { key: "Pause", x: 17, y: 2 }
+        case "PageUp": return { key: "PageUp", x: 17, y: 3 }
+        case "PageDown": return { key: "PageDown", x: 17, y: 4 }
         
-        case "ArrowLeft": return { key: "ArrowLeft", x: 15, y: 6 }
-        case "ArrowUp": return { key: "ArrowUp", x: 16, y: 5 }
-        case "ArrowDown": return { key: "ArrowDown", x: 16, y: 6 }
-        case "ArrowRight": return { key: "ArrowRight", x: 17, y: 6 }
+        case "ArrowLeft": return { key: "ArrowLeft", x: 15, y: 7 }
+        case "ArrowUp": return { key: "ArrowUp", x: 16, y: 6 }
+        case "ArrowDown": return { key: "ArrowDown", x: 16, y: 7 }
+        case "ArrowRight": return { key: "ArrowRight", x: 17, y: 7 }
 
         case "Numpad7": return { key: "Numpad7", x: 19, y: 2 }
         case "Numpad8": return { key: "Numpad8", x: 20, y: 2 }
@@ -221,7 +221,13 @@ export default {
 
         const keyPadding = 2;
         let sectionWidth = maxX - minX + 1
-        let keyWidth = this.width / Math.max(sectionWidth + 1, 6) - (2*keyPadding);
+        let keyWidth;
+        if (!this.isShowingFull) {
+          keyWidth = this.width / Math.max(sectionWidth + 1, 6) - (2*keyPadding);
+        }
+        else {
+          keyWidth = this.width / 16;
+        }
 
         // set section width
         section.style.gridTemplateColumns = `repeat(${sectionWidth}, auto)`
@@ -264,7 +270,7 @@ export default {
 <style>
 .key-section {
   display: inline-grid;
-  margin: 20px;
+  margin: 10px;
 }
 
 #keyboard-wrapper {
