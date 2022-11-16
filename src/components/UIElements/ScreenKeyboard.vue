@@ -162,7 +162,7 @@ export default {
         let arrowIsland = [];
 
         for (let name of ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]) {
-          if (this.keys.includes(name)) {
+          if (keyPool.includes(name)) {
             let key = this.infoFromKeyCode(name);
             keyMap[Map2DTo1D(key.x, key.y)] = 0;
             arrowIsland.push(key);
