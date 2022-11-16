@@ -2,7 +2,7 @@
   <div>
     <div id="keyboard-wrapper" :style="cssProps">
     </div>
-    <button id="show-keyboard" @click="isShowingFull = !isShowingFull">{{ isShowingFull ? "Hide" : "Show" }} Full</button>
+    <button id="show-keyboard" @click="isShowingFull = !isShowingFull">{{ showButtonText }}</button>
   </div>
 </template>
 
@@ -141,6 +141,8 @@ export default {
       const sections = document.getElementsByClassName("key-section");
       Array.from(sections).forEach((e, _) => { e.remove() });
       
+      if (this.keys == undefined && !this.isShowingFull) return;
+      
       const width = 24;
       const Map2DTo1D = (x, y) => y * width + x;
 
@@ -261,6 +263,12 @@ export default {
       return {
         'width': `${this.width}px`
       };
+    },
+    showButtonText() {
+      let hideShow = this.isShowingFull ? "Hide" : "Show"
+      let fullOrKeyboard = this.keys ? "Full" : "Keyboard";
+
+      return `${hideShow} ${fullOrKeyboard}`;
     }
   }
 }
@@ -285,7 +293,7 @@ export default {
   border: none;
   color: white;
   font-size: 20px;
-  margin-left: 20px;
+  margin: 10px 0 0 20px;
   padding: 5px;
 }
 

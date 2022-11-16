@@ -3,7 +3,7 @@
   <video  v-else-if="getMediaType(url) ==='vid' && gifmode != undefined" :src='$getResourceURL(url)' :width="videoWidth" autoplay="true" muted="true" loop disablePictureInPicture />
   <video  v-else-if="getMediaType(url) ==='vid' && gifmode == undefined" :src='$getResourceURL(url)' :width="videoWidth" controls controlsList="nodownload" disablePictureInPicture alt />
   <div    v-else-if="getMediaType(url) === 'swf'" class="swf-renderer">
-    <Keyboard :width="flashProps.width" :player="player" :keys="['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space']"></Keyboard>
+    <Keyboard :width="flashProps.width" :player="player" :keys="usedKeys[flashProps.id]"></Keyboard>
   </div>
 
   <component v-else-if="getMediaType(url) === 'html'"
@@ -70,6 +70,9 @@ export default {
   },
   data() {
     return {
+      usedKeys: {
+        "00397": ['KeyW','KeyA','KeyS','KeyD','Space']
+      },
       indexedFlashProps: {
         // CAPTCHA GENERATOR
         "captchas": {width: 1100, height: 600},
