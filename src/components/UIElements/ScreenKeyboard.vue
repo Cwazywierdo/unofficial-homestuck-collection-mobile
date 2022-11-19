@@ -254,6 +254,10 @@ export default {
             }
           });
           keyElement.$mount();
+
+          keyElement.$el.style.gridColumn = `${key.x - minX + 1}`;
+          keyElement.$el.style.gridRow = `${key.y - minY + 1}`;
+
           section.appendChild(keyElement.$el);
         }
 

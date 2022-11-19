@@ -5,7 +5,7 @@
 <script>
 export default{
   name: "KeyButton",
-  props: ['keyCode', 'player', 'buttonSize', 'location'],
+  props: ['keyCode', 'player', 'buttonSize'],
   methods: {
     CREvent(eventType) {
       // ruffle needs to be clicked into focus to register keyboard events
@@ -139,8 +139,6 @@ export default{
       return {
         '--text-scalar': `${ this.nameFromKeyCode.width != null ? ( 1 / this.nameFromKeyCode.width) : 1 }`,
         '--button-size': `${this.buttonSize}px`,
-        'grid-column': `${this.location.x + 1}`,
-        'grid-row': `${this.location.y + 1}`,
       }
     }
   }
