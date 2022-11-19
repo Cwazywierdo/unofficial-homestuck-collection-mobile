@@ -228,11 +228,11 @@ export default {
           minY = Math.min(minY, key.y);
         }
 
-        const keyPadding = 2;
+        const gridSpacing = 3;
         let sectionWidth = maxX - minX + 1
         let keyWidth;
         if (!this.isShowingFull) {
-          keyWidth = this.width / Math.max(sectionWidth + 1, 6) - (2*keyPadding);
+          keyWidth = this.width / Math.max(sectionWidth + 1, 3 + Math.sqrt(keyPool.length)) - gridSpacing;
         }
         else {
           keyWidth = this.width / 16;
@@ -240,6 +240,7 @@ export default {
 
         // set section width
         section.style.gridTemplateColumns = `repeat(${sectionWidth}, auto)`
+        section.style.gap = `${gridSpacing}px`
 
         // create each key and assign position within its section
         const keyClass = Vue.extend(KeyButton);

@@ -23,20 +23,20 @@ export default{
   computed: {
     nameFromKeyCode() {
       switch (this.keyCode) {
-        case "Escape": return { name: "Esc", location: { x: 0, y: 0 }, width: 1.7 }
+        case "Escape": return { name: "Esc", width: 1.7 }
 
-        case "F1": return { name: "F1", width: 1.2 }
-        case "F2": return { name: "F2", width: 1.2 }
-        case "F3": return { name: "F3", width: 1.2 }
-        case "F4": return { name: "F4", width: 1.2 }
-        case "F5": return { name: "F5", width: 1.2 }
-        case "F6": return { name: "F6", width: 1.2 }
-        case "F7": return { name: "F7", width: 1.2 }
-        case "F8": return { name: "F8", width: 1.2 }
-        case "F9": return { name: "F9", width: 1.2 }
-        case "F10": return { name: "F10", width: 1.6 }
-        case "F11": return { name: "F11", width: 1.6 }
-        case "F12": return { name: "F12", width: 1.6 }        
+        case "F1": return { name: "F1", width: 1.3 }
+        case "F2": return { name: "F2", width: 1.3 }
+        case "F3": return { name: "F3", width: 1.3 }
+        case "F4": return { name: "F4", width: 1.3 }
+        case "F5": return { name: "F5", width: 1.3 }
+        case "F6": return { name: "F6", width: 1.3 }
+        case "F7": return { name: "F7", width: 1.3 }
+        case "F8": return { name: "F8", width: 1.3 }
+        case "F9": return { name: "F9", width: 1.3 }
+        case "F10": return { name: "F10", width: 1.7 }
+        case "F11": return { name: "F11", width: 1.7 }
+        case "F12": return { name: "F12", width: 1.7 }        
 
         case "Backquote": return { name: "`" }
         case "Digit1": return { name: "1" }
@@ -53,7 +53,7 @@ export default{
         case "Equal": return { name: "=" }
         case "Backspace": return { name: "Back", width: 2.2 }
 
-        case "Tab": return { name: "Tab", width: 1.6 }
+        case "Tab": return { name: "Tab", width: 1.7 }
         case "KeyQ": return { name: "Q" }
         case "KeyW": return { name: "W" }
         case "KeyE": return { name: "E" }
@@ -68,7 +68,7 @@ export default{
         case "BracketRight": return { name: "]" }
         case "Backslash": return { name: "\\" }
         
-        case "CapsLock": return { name: "Caps", width: 2 }
+        case "CapsLock": return { name: "Caps", width: 2.2 }
         case "KeyA": return { name: "A" }
         case "KeyS": return { name: "S" }
         case "KeyD": return { name: "D" }
@@ -95,12 +95,12 @@ export default{
         case "Slash": return { name: "/" }
         case "ShiftRight": return { name: "R. Shift", width: 2.3 }
 
-        case "ControlLeft": return { name: "L. Ctrl", width: 2 }
+        case "ControlLeft": return { name: "L. Ctrl", width: 2.1 }
         case "AltLeft": return { name: "L. Alt", width: 2 }
         case "AltRight": return { name: "R. Alt", width: 2 }
-        case "ControlRight": return { name: "R. Ctrl", width: 2 }
+        case "ControlRight": return { name: "R. Ctrl", width: 2.1 }
 
-        case "Space": return { name: "Space", width: 2.6 }
+        case "Space": return { name: "Space", width: 2.9 }
         
         case "Insert": return { name: "Ins", width: 1.6 }
         case "Delete": return { name: "Del", width: 1.7 }
@@ -108,8 +108,8 @@ export default{
         case "Home": return { name: "Home", width: 2.8 }
         case "End": return { name: "End", width: 2 }
         case "Pause": return { name: "Pause", width: 3 }
-        case "PageUp": return { name: "Pg. Up", width: 2 }
-        case "PageDown": return { name: "Pg. Dwn", width: 2 }
+        case "PageUp": return { name: "Pg. Up", width: 2.2 }
+        case "PageDown": return { name: "Pg. Dwn", width: 2.2 }
         
         case "ArrowLeft": return { name: "Left", width: 2 }
         case "ArrowUp": return { name: "Up", width: 1.5 }
@@ -152,15 +152,12 @@ export default{
     width: var(--button-size);
     height: var(--button-size);
 
-    --margin: 2px;
-    font-size: calc((var(--button-size) - (var(--margin) * 2)) * var(--text-scalar) * 0.7);
-    margin: var(--margin);
-
+    font-size: calc(var(--button-size) * var(--text-scalar) * 0.7);
     background-color: #4ae24d;
     border: none;
     color: white;
     font-weight: 900;
-    padding: 2px;
+    padding: 0;
     display:block;
     text-align: center;
   }
