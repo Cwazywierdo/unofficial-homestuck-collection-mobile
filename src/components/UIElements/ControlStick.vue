@@ -46,12 +46,12 @@
 
 <script>
 export default {
-  props: ["size"],
+  props: ["size", "player", "keyUp", "keyDown", "keyLeft", "keyRight"],
   mounted() {
     document.onmouseup = this.thumbMouseUp;
     document.onmousemove = this.thumbMove;
     this.stickThumb = this.$el.querySelector(".stick-thumb");
-    this.setThumbPos();
+    this.updateThumb();
   },
   data() {
     return {
@@ -60,7 +60,9 @@ export default {
       thumbX: 0,
       thumbY: 0,
       isClicked: false,
-      stickThumb: undefined
+      stickThumb: undefined,
+      downKeys: { up: false, down: false, left: false, right: false },
+      deadzone: 0.4
     };
   },
   computed: {
@@ -109,27 +111,76 @@ export default {
       this.thumbX += e.movementX * scalar;
       this.thumbY += e.movementY * scalar;
     },
+    updateThumb() {
+      this.setThumbPos();
+      this.updateKeys();
+    },
     setThumbPos() {
       let realX = this.thumbX,
         realY = this.thumbY;
 
-      let dist = realX * realX + realY * realY;
+      let dist = Math.sqrt(realX * realX + realY * realY);
       if (dist > 1) {
-        dist = Math.sqrt(dist);
         realX /= dist;
         realY /= dist;
       }
 
       this.stickThumb.style.left = `${((realX + 1) * this.size) / 2}px`;
       this.stickThumb.style.top = `${((realY + 1) * this.size) / 2}px`;
+    },
+    updateKeys() {
+      let newDownKeys = {};
+
+      const distSquared = this.thumbX * this.thumbX + this.thumbY * this.thumbY;
+      if (distSquared > this.deadzone * this.deadzone) {
+        const angle = Math.atan2(this.thumbY, this.thumbX);
+        newDownKeys.up = angle <= -Math.PI / 6 && angle >= (-5 * Math.PI) / 6;
+        newDownKeys.down = angle >= Math.PI / 6 && angle <= (5 * Math.PI) / 6;
+        newDownKeys.right = angle >= -Math.PI / 3 && angle <= Math.PI / 3;
+        newDownKeys.left =
+          angle >= (2 * Math.PI) / 3 || angle <= (-2 * Math.PI) / 3;
+      } else {
+        newDownKeys.up = false;
+        newDownKeys.down = false;
+        newDownKeys.right = false;
+        newDownKeys.left = false;
+      }
+      this.downKeys = newDownKeys;
+    },
+    CREvent(eventType, keyCode) {
+      // ruffle needs to be clicked into focus to register keyboard events
+      const pointerEvent = new PointerEvent("pointerdown");
+      this.player.dispatchEvent(pointerEvent);
+
+      var e = new Event(eventType);
+      e.key = "";
+      e.code = keyCode;
+      window.dispatchEvent(e);
     }
   },
   watch: {
     thumbX() {
-      this.setThumbPos();
+      this.updateThumb();
     },
     thumbY() {
-      this.setThumbPos();
+      this.updateThumb();
+    },
+    downKeys: {
+      handler(newKeys, oldKeys) {
+        if (newKeys.up != oldKeys.up) {
+          this.CREvent(newKeys.up ? "keydown" : "keyup", this.keyUp);
+        }
+        if (newKeys.down != oldKeys.down) {
+          this.CREvent(newKeys.down ? "keydown" : "keyup", this.keyDown);
+        }
+        if (newKeys.left != oldKeys.left) {
+          this.CREvent(newKeys.left ? "keydown" : "keyup", this.keyLeft);
+        }
+        if (newKeys.right != oldKeys.right) {
+          this.CREvent(newKeys.right ? "keydown" : "keyup", this.keyRight);
+        }
+      },
+      deep: true
     }
   }
 };
