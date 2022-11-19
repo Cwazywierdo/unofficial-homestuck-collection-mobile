@@ -141,24 +141,29 @@ export default {
       }
     },
     setupKeyboard() {
+      // Clear existing controls
       const sections = keyboardWrapper.children;
       Array.from(sections).forEach((e, _) => { e.remove() });
       
+      // Just skip setup if there are no controls
       if (this.keys == undefined && !this.isShowingFull) return;
       
       const width = 24;
       const Map2DTo1D = (x, y) => y * width + x;
 
       // create map of used keys
-      let keyPool = this.isShowingFull ? allKeys : this.keys;
+      const keyPool = this.isShowingFull ? allKeys : this.keys;
       let keyMap = []
       for (const key of keyPool) {
+        // If the 'key' is a control stick, handle it separately
         if (typeof key != 'string') {
-          let controlSize = this.width * 0.4;
+          const controlSize = this.width * 0.4;
           this.createControlStick(key, controlSize);
           continue;
         }
-        let loc = this.infoFromKeyCode(key);
+        
+        // map the key to it's given location
+        const loc = this.infoFromKeyCode(key);
         keyMap[Map2DTo1D(loc.x, loc.y)] = { key: key, ...loc };
       }
 
@@ -173,7 +178,7 @@ export default {
 
         for (let name of ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]) {
           if (keyPool.includes(name)) {
-            let key = this.infoFromKeyCode(name);
+            const key = this.infoFromKeyCode(name);
             keyMap[Map2DTo1D(key.x, key.y)] = 0;
             arrowIsland.push(key);
           }
@@ -200,7 +205,7 @@ export default {
           // for all surrounding keys...
           for (let x = -1; x < 2; x++) {
             for (let y = -1; y < 2; y++) {
-              let neighbor = keyMap[Map2DTo1D(key.x + x, key.y + y)];
+              const neighbor = keyMap[Map2DTo1D(key.x + x, key.y + y)];
               // if the neighbor exists...
 
               if(neighbor) {
@@ -217,7 +222,7 @@ export default {
       }
       
       for (let island of keyIslands) {
-        let section = document.createElement('div');
+        const section = document.createElement('div');
         section.classList.add('key-section');
         
         // get bounds for each island
@@ -229,13 +234,11 @@ export default {
         }
 
         const gridSpacing = 3;
-        let sectionWidth = maxX - minX + 1
-        let keyWidth;
+        const sectionWidth = maxX - minX + 1
+        // keys have a default width of 1/16th of the screen
+        let keyWidth = this.width / 16;
         if (!this.isShowingFull) {
           keyWidth = this.width / Math.max(sectionWidth + 1, 3 + Math.sqrt(keyPool.length)) - gridSpacing;
-        }
-        else {
-          keyWidth = this.width / 16;
         }
 
         // set section width
@@ -245,7 +248,8 @@ export default {
         // create each key and assign position within its section
         const keyClass = Vue.extend(KeyButton);
         for (let key of island) {
-          let keyElement = new keyClass({
+          // create key instance
+          const keyElement = new keyClass({
             propsData: {
               keyCode: key.key,
               player: this.player,
@@ -255,9 +259,11 @@ export default {
           });
           keyElement.$mount();
 
+          // set key location in section
           keyElement.$el.style.gridColumn = `${key.x - minX + 1}`;
           keyElement.$el.style.gridRow = `${key.y - minY + 1}`;
 
+          // add key to section element
           section.appendChild(keyElement.$el);
         }
 
@@ -294,8 +300,8 @@ export default {
       };
     },
     showButtonText() {
-      let hideShow = this.isShowingFull ? "Hide" : "Show"
-      let fullOrKeyboard = this.keys ? "Full" : "Keyboard";
+      const hideShow = this.isShowingFull ? "Hide" : "Show"
+      const fullOrKeyboard = this.keys ? "Full" : "Keyboard";
 
       return `${hideShow} ${fullOrKeyboard}`;
     }

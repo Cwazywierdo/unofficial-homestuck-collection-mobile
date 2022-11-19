@@ -67,16 +67,16 @@ export default {
   },
   computed: {
     octagonPoints() {
-      let center = this.size / 2;
-      let radius = this.size / 2 - this.strokeWidth;
+      const center = this.size / 2;
+      const radius = this.size / 2 - this.strokeWidth;
       let retString = "";
 
       for (let i = 0; i < 8; i++) {
-        let cos = Math.cos((i / 4) * Math.PI);
-        let sin = Math.sin((i / 4) * Math.PI);
+        const cos = Math.cos((i / 4) * Math.PI);
+        const sin = Math.sin((i / 4) * Math.PI);
 
-        let px = center + cos * radius;
-        let py = center + sin * radius;
+        const px = center + cos * radius;
+        const py = center + sin * radius;
 
         retString += `${px} ${py}, `;
       }
@@ -107,7 +107,8 @@ export default {
     thumbMove(e) {
       if (!this.isClicked) return;
 
-      let scalar = 2 / this.size / (1 - this.thumbScalar);
+      const scalar = 2 / this.size / (1 - this.thumbScalar);
+      
       this.thumbX += e.movementX * scalar;
       this.thumbY += e.movementY * scalar;
     },
@@ -119,7 +120,7 @@ export default {
       let realX = this.thumbX,
         realY = this.thumbY;
 
-      let dist = Math.sqrt(realX * realX + realY * realY);
+      const dist = Math.sqrt(realX * realX + realY * realY);
       if (dist > 1) {
         realX /= dist;
         realY /= dist;

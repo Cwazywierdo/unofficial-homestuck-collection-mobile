@@ -9,7 +9,7 @@ export default{
   methods: {
     CREvent(eventType) {
       // ruffle needs to be clicked into focus to register keyboard events
-      let pointerEvent = new PointerEvent("pointerdown");
+      const pointerEvent = new PointerEvent("pointerdown");
       this.player.dispatchEvent(pointerEvent);
 
       var e = new Event(eventType);
