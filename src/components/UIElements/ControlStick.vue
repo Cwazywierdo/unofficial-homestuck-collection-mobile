@@ -48,8 +48,8 @@
 export default {
   props: ["size", "player", "keyUp", "keyDown", "keyLeft", "keyRight"],
   mounted() {
-    document.onmouseup = this.thumbMouseUp;
-    document.onmousemove = this.thumbMove;
+    document.addEventListener("mouseup", this.thumbMouseUp);
+    document.addEventListener("mousemove", this.thumbMove);
     this.stickThumb = this.$el.querySelector(".stick-thumb");
     this.updateThumb();
   },
