@@ -9,16 +9,19 @@
 <script>
 import Vue from 'vue'
 import KeyButton from '@/components/UIElements/KeyButton.vue'
+import ControlStick from '@/components/UIElements/ControlStick.vue'
 
 const allKeys = ["Escape","F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12","Backquote","Digit1","Digit2","Digit3","Digit4","Digit5","Digit6","Digit7","Digit8","Digit9","Digit0","Minus","Equal","Backspace","Tab","KeyQ","KeyW","KeyE","KeyR","KeyT","KeyY","KeyU","KeyI","KeyO","KeyP","BracketLeft","BracketRight","Backslash","CapsLock","KeyA","KeyS","KeyD","KeyF","KeyG","KeyH","KeyJ","KeyK","KeyL","Semicolon","Quote","Enter","ShiftLeft","KeyZ","KeyX","KeyC","KeyV","KeyB","KeyN","KeyM","Comma","Period","Slash","ShiftRight","ControlLeft","AltLeft","AltRight","ControlRight","Space","Insert","Delete","ScrollLock","Home","End","Pause","PageUp","PageDown","ArrowLeft","ArrowUp","ArrowDown","ArrowRight","Numpad7","Numpad8","Numpad9","NumpadAdd","NumpadAdd","Numpad4","Numpad5","Numpad6","NumpadSubtract","Numpad1","Numpad2","Numpad3","NumpadMultiply","Numpad0","NumpadDecimal","NumpadDivide"]
+let keyboardWrapper;
 
 export default {
-  components: { KeyButton },
+  components: { KeyButton, ControlStick },
   props: ["player", "keys", "width"],
   updated() {
     this.setupKeyboard();
   },
   mounted() {
+    keyboardWrapper = this.$el.querySelector('#keyboard-wrapper');
     this.setupKeyboard();
   },
   methods: {
@@ -138,7 +141,7 @@ export default {
       }
     },
     setupKeyboard() {
-      const sections = document.getElementsByClassName("key-section");
+      const sections = keyboardWrapper.children;
       Array.from(sections).forEach((e, _) => { e.remove() });
       
       if (this.keys == undefined && !this.isShowingFull) return;
@@ -150,6 +153,11 @@ export default {
       let keyPool = this.isShowingFull ? allKeys : this.keys;
       let keyMap = []
       for (const key of keyPool) {
+        if (typeof key != 'string') {
+          let controlSize = this.width * 0.4;
+          this.createControlStick(key, controlSize);
+          continue;
+        }
         let loc = this.infoFromKeyCode(key);
         keyMap[Map2DTo1D(loc.x, loc.y)] = { key: key, ...loc };
       }
@@ -248,8 +256,25 @@ export default {
           section.appendChild(keyElement.$el);
         }
 
-        document.getElementById("keyboard-wrapper").appendChild(section);
+        keyboardWrapper.appendChild(section);
       }
+    },
+    createControlStick(keys, size) {
+      const controlStickClass = Vue.extend(ControlStick);
+
+      let controlStickElement = new controlStickClass({
+        propsData: {
+          size: size,
+          player: this.player,
+          keyUp: keys.up,
+          keyDown: keys.down,
+          keyLeft: keys.left,
+          keyRight: keys.right,
+        }
+      });
+      controlStickElement.$mount();
+        
+      keyboardWrapper.appendChild(controlStickElement.$el);
     }
   },
   data() {

@@ -71,7 +71,7 @@ export default {
   data() {
     return {
       usedKeys: {
-        "00397": ['KeyW','KeyA','KeyS','KeyD','Space']
+        "00397": [{ up: "KeyW", down: "KeyS", left: "KeyA", right: "KeyD"}, 'Space']
       },
       indexedFlashProps: {
         // CAPTCHA GENERATOR
