@@ -56,7 +56,7 @@ export default {
   data() {
     return {
       strokeWidth: 5,
-      thumbScalar: 0.4,
+      thumbScalar: 0.7,
       thumbX: 0,
       thumbY: 0,
       isClicked: false,
@@ -107,7 +107,7 @@ export default {
     thumbMove(e) {
       if (!this.isClicked) return;
 
-      let scalar = 2 / this.size;
+      let scalar = 2 / this.size / (1 - this.thumbScalar);
       this.thumbX += e.movementX * scalar;
       this.thumbY += e.movementY * scalar;
     },
@@ -125,8 +125,10 @@ export default {
         realY /= dist;
       }
 
-      this.stickThumb.style.left = `${((realX + 1) * this.size) / 2}px`;
-      this.stickThumb.style.top = `${((realY + 1) * this.size) / 2}px`;
+      const posX = ((realX * (1 - this.thumbScalar) + 1) * this.size) / 2;
+      const posY = ((realY * (1 - this.thumbScalar) + 1) * this.size) / 2;
+      this.stickThumb.style.left = `${posX}px`;
+      this.stickThumb.style.top = `${posY}px`;
     },
     updateKeys() {
       let newDownKeys = {};
