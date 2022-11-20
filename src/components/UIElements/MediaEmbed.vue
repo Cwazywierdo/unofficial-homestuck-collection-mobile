@@ -443,8 +443,8 @@ document.addEventListener('click', function (e) {
           break
         case 'heightReset':
           if (this.$localData.settings.jsFlashes) {
-            this.$el.style.transition = 'height 0.2s'
-            this.$el.style.height = this.cropHeight[this.flashProps.id]
+            this.player.style.transition = 'height 0.2s'
+            this.player.style.height = this.cropHeight[this.flashProps.id]
           }
           break
 
@@ -558,10 +558,10 @@ document.addEventListener('click', function (e) {
     },
 
     heightStart(n) {
-      if (this.$el.style.height != this.cropHeight[this.flashProps.id]) {
-        this.$el.style.transition = 'height 0.2s'
-        this.$el.style.height = this.cropHeight[this.flashProps.id]
-        window.getComputedStyle(this.$el)
+      if (this.player.style.height != this.cropHeight[this.flashProps.id]) {
+        this.player.style.transition = 'height 0.2s'
+        this.player.style.height = this.cropHeight[this.flashProps.id]
+        window.getComputedStyle(this.player)
       }
       let time
       let transition = 'height 0.2s'
@@ -598,16 +598,16 @@ document.addEventListener('click', function (e) {
       if (time) {
         this.startTimer(() => {
           if (Date.now() >= this.timer.start + this.timer.delay) {
-            this.$el.style.transition = transition
-            this.$el.style.height = heightTo
+            this.player.style.transition = transition
+            this.player.style.height = heightTo
 
             clearInterval(this.timer.interval)
             this.timer = {}
           }
         }, time)
       } else {
-        this.$el.style.transition = transition
-        this.$el.style.height = heightTo
+        this.player.style.transition = transition
+        this.player.style.height = heightTo
       }
     },
     startTimer(callback, delay){
