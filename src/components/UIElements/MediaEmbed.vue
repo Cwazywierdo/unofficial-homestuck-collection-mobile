@@ -49,8 +49,13 @@ export default {
       }
 
       this.player.style.width = `${this.flashProps.width}px`;
-      this.player.style.height = `${this.flashProps.height}px`;
+
+      const useCropHeight = this.$localData.settings.jsFlashes && this.flashProps.id in this.cropHeight;
+      const height = useCropHeight ? this.cropHeight[flashProps.id] : `${this.flashProps.height}px`;
+      this.player.style.height = height;
+
       this.player.style.verticalAlign = 'top';
+
       this.$el.prepend(this.player);
 
       const data = this.getFileBuffer(`assets:/${this.url}`);
@@ -63,6 +68,8 @@ export default {
                     contextMenu: false,
                     quality: "best",
                     allowScriptAccess: true,
+                    scale: "noborder",
+                    salign: "T",
                 };
 
       this.player.load({ data, ...config });
